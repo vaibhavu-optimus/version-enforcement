@@ -1,0 +1,29 @@
+name: Enforce Version Change
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get list of changed files
+        id: changes
+        run: |
+          git fetch origin ${{ github.event.before }}
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
+          cat changed_files.txt
+
+      - name: Check if version file was changed
+        run: |
+          if ! grep -q 'version.txt' changed_files.txt; then
+            echo "❌ version.txt was not updated!"
+            exit 1
+          else
+            echo "✅ version.txt was updated."
+          fi
