@@ -8,9 +8,10 @@ on:
   merge_group:
     branches:
       - main
-      
+
 jobs:
   check-version:
+    name: check-version
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
